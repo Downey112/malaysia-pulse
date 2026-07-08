@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Node / frontend
+node_modules/
+dist/
+
+# Secrets — never commit real values
+.env
+azure-function/local.settings.json
+
+# Editors / OS
+.vscode/
+.DS_Store
