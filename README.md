@@ -1,5 +1,8 @@
 # Malaysia Pulse
 
+**Live demo:** [malaysia-pulse.vercel.app](https://malaysia-pulse.vercel.app/)
+**API:** [malaysia-pulse-api.onrender.com](https://malaysia-pulse-api.onrender.com)
+
 State-level cost-of-living indicators (CPI, fuel prices, labour force) for Malaysia,
 sourced live from the official [data.gov.my](https://data.gov.my) Open API.
 
@@ -180,7 +183,7 @@ need any extra workaround for that as long as the schedule keeps running.
 
 1. [render.com](https://render.com) → sign in with GitHub → **New → Web Service**
 2. Connect the `malaysia-pulse` repo, set **Root Directory** to `backend`
-3. **Runtime**: Python 3
+3. **Runtime**: Python 3 — the repo includes `backend/runtime.txt` (`python-3.12.7`) and `backend/.python-version` (`3.12`) to pin the version; Render picks these up automatically
 4. **Build Command**: `pip install -r requirements.txt`
 5. **Start Command**: `gunicorn main:app --workers 2 --worker-class uvicorn.workers.UvicornWorker --bind=0.0.0.0:$PORT`
    (same command as `backend/startup.txt`, but note Render assigns its own `$PORT`
