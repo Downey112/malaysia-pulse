@@ -1,0 +1,38 @@
+name: Scheduled ETL
+
+# Runs the Malaysia Pulse ETL daily. This replaces the Azure Function timer
+# trigger — same job, but running on GitHub's own infrastructure for free
+# rather than needing a separate cloud service.
+#
+# Also doubles as a Supabase keep-alive: since this makes a real write to the
+# database daily, it resets Supabase's 7-day inactivity pause timer as a
+# side effect.
+
+on:
+  schedule:
+    # 22:00 UTC = 06:00 MYT (UTC+8). GitHub's scheduler can be delayed by a
+    # few minutes during high load — don't rely on exact timing.
+    - cron: "0 22 * * *"
+  workflow_dispatch: {}  # lets you trigger a run manually from the Actions tab
+
+jobs:
+  run-etl:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r etl/requirements.txt
+
+      - name: Run ETL for each dataset
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          python -u etl/fetch_data.py --dataset cpi_state
+          python -u etl/fetch_data.py --dataset cpi_state_inflation
+          python -u etl/fetch_data.py --dataset fuelprice
+          python -u etl/fetch_data.py --dataset lfs_qtr_state
